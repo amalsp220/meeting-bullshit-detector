@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/meeting-bullshit-detector/static/css/main.30685ab8.css",
-    "main.js": "/meeting-bullshit-detector/static/js/main.76b54f84.js",
+    "main.css": "/meeting-bullshit-detector/static/css/main.5507f3be.css",
+    "main.js": "/meeting-bullshit-detector/static/js/main.5658687e.js",
     "index.html": "/meeting-bullshit-detector/index.html",
-    "main.30685ab8.css.map": "/meeting-bullshit-detector/static/css/main.30685ab8.css.map",
-    "main.76b54f84.js.map": "/meeting-bullshit-detector/static/js/main.76b54f84.js.map"
+    "main.5507f3be.css.map": "/meeting-bullshit-detector/static/css/main.5507f3be.css.map",
+    "main.5658687e.js.map": "/meeting-bullshit-detector/static/js/main.5658687e.js.map"
   },
   "entrypoints": [
-    "static/css/main.30685ab8.css",
-    "static/js/main.76b54f84.js"
+    "static/css/main.5507f3be.css",
+    "static/js/main.5658687e.js"
   ]
 }
