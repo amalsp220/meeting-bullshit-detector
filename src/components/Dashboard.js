@@ -13,25 +13,54 @@ const MetricCard = ({ title, value, subtitle, icon, color, suffix = '', trend })
     <div className="metric-card__subtitle">{subtitle}</div>
     {trend !== undefined && (
       <div className="metric-card__bar">
-        <div className="metric-card__bar-fill" style={{ width: `${Math.min(trend, 100)}%`, background: color === 'danger' ? 'var(--danger)' : color === 'success' ? 'var(--success)' : color === 'warning' ? 'var(--warning)' : 'var(--primary)' }}></div>
+        <div
+          className="metric-card__bar-fill"
+          style={{
+            width: `${Math.min(trend, 100)}%`,
+            background:
+              color === 'danger'
+                ? 'var(--danger)'
+                : color === 'success'
+                ? 'var(--success)'
+                : color === 'warning'
+                ? 'var(--warning)'
+                : 'var(--primary)',
+          }}
+        />
       </div>
     )}
   </div>
 );
 
-const Dashboard = ({ metrics, isAnalyzing, meetingDuration }) => {
-  const { productiveScore, bsScore, decisionsCount, circularTopics, alerts, topKeywords } = metrics;
+const Dashboard = ({ analysis, isAnalyzing, meetingDuration }) => {
+  // Return empty state if no analysis yet
+  if (!analysis) {
+    return (
+      <div className="dashboard">
+        <div className="dashboard__header">
+          <h2 className="dashboard__title">
+            <span className="live-badge">Ready for Analysis</span>
+          </h2>
+        </div>
+        <div className="metrics-grid">
+          <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '40px', gridColumn: '1 / -1' }}>
+            Start recording or paste a transcript to see analysis metrics here.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
+  const { productiveScore = 0, bsScore = 0, decisionsCount = 0, circularTopics = 0, alerts = [], keywords = [] } = analysis;
+  
   const formatDuration = (s) => {
     const m = Math.floor(s / 60);
     return m < 1 ? `${s}s` : `${m}m`;
   };
-
-  const efficiency = productiveScore + bsScore > 0
-    ? Math.round((productiveScore / (productiveScore + bsScore)) * 100)
-    : 0;
-
-  const timeSaved = Math.round(meetingDuration * (bsScore / 100) / 60);
+  
+  const efficiency =
+    productiveScore + bsScore > 0 ? Math.round((productiveScore / (productiveScore + bsScore)) * 100) : 0;
+  const timeSaved = Math.round((meetingDuration * (bsScore / 100)) / 60);
 
   return (
     <div className="dashboard">
@@ -50,7 +79,6 @@ const Dashboard = ({ metrics, isAnalyzing, meetingDuration }) => {
           </div>
         )}
       </div>
-
       <div className="metrics-grid">
         <MetricCard
           title="Productive Score"
@@ -104,12 +132,11 @@ const Dashboard = ({ metrics, isAnalyzing, meetingDuration }) => {
           suffix="m"
         />
       </div>
-
-      {topKeywords && topKeywords.length > 0 && (
+      {keywords && keywords.length > 0 && (
         <div className="keyword-section">
           <h3 className="keyword-title">Hot Topics</h3>
           <div className="keyword-tags">
-            {topKeywords.map((kw, i) => (
+            {keywords.map((kw, i) => (
               <span key={i} className={`keyword-tag keyword-tag--${kw.type || 'neutral'}`}>
                 {kw.word || kw}
                 {kw.count && <span className="keyword-count">{kw.count}</span>}
