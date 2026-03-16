@@ -30,7 +30,7 @@ function SuperChat({ apiKey, transcript }) {
 
   return (
     <div className="super-chat">
-      <h2><span className="icon">\u{1F4AC}</span> Super Chat - Meeting Insights</h2>
+      <h2><span className="icon">💬</span> Super Chat - Meeting Insights</h2>
       <p className="description">Ask any question about the meeting and get AI-powered answers!</p>
       <div className="input-group">
         <input
