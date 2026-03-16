@@ -42,6 +42,7 @@ function App() {
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = 'en-US';
+     recognitionRef.current = recognition;
     recognition.onresult = (event) => {
       for (let i = event.resultIndex; i < event.results.length; i++) {
         if (event.results[i].isFinal) {
