@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/meeting-bullshit-detector/static/css/main.30685ab8.css",
+    "main.js": "/meeting-bullshit-detector/static/js/main.b8d04839.js",
+    "index.html": "/meeting-bullshit-detector/index.html",
+    "main.30685ab8.css.map": "/meeting-bullshit-detector/static/css/main.30685ab8.css.map",
+    "main.b8d04839.js.map": "/meeting-bullshit-detector/static/js/main.b8d04839.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.30685ab8.css",
+    "static/js/main.b8d04839.js"
+  ]
+}
