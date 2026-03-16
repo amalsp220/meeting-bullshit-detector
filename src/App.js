@@ -5,9 +5,7 @@ import Dashboard from './components/Dashboard';
 import MeetingRecorder from './components/MeetingRecorder';
 import TranscriptPanel from './components/TranscriptPanel';
 import AnalysisPanel from './components/AnalysisPanel';
-import YouTubeSummarizer from './components/YouTubeSummarizer';
-import SuperChat from './components/SuperChat';
-import { analyzeMeetingText, summarizeYouTubeVideo, generateSuperChat } from './utils/openaiService';
+import { analyzeMeetingText } from './utils/openaiService';
 
 function App() {
   const [apiKey, setApiKey] = useState(localStorage.getItem('openai_api_key') || '');
@@ -18,11 +16,6 @@ function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [meetingDuration, setMeetingDuration] = useState(0);
   const [activeTab, setActiveTab] = useState('recorder');
-  const [youTubeUrl, setYouTubeUrl] = useState('');
-  const [isSummarizing, setIsSummarizing] = useState(false);
-  const [superChatData, setSuperChatData] = useState(null);
-  const [isGeneratingSuperChat, setIsGeneratingSuperChat] = useState(false);
-  const [superChatText, setSuperChatText] = useState('');
   const recognitionRef = useRef(null);
   const timerRef = useRef(null);
 
@@ -81,29 +74,11 @@ function App() {
     setIsAnalyzing(false);
   };
 
-  const handleYouTubeSummarize = async (url) => {
-    if (!url || !apiKey) { alert('Please enter a YouTube URL and API key'); return; }
-    setIsSummarizing(true);
-    try {
-      const result = await summarizeYouTubeVideo(url, apiKey);
-      setSuperChatData(result);
-    } catch (err) { alert('Failed to summarize: ' + err.message); }
-    setIsSummarizing(false);
-  };
-
-  const handleSuperChat = async (text) => {
-    if (!text || !apiKey) return;
-    setIsGeneratingSuperChat(true);
-    try {
-      const result = await generateSuperChat(text, '', apiKey);
-      setSuperChatData(result);
-    } catch (err) { alert('Failed to generate Super Chat: ' + err.message); }
-    setIsGeneratingSuperChat(false);
-  };
-
   const clearSession = () => {
-    setTranscript([]); setFullText(''); setAnalysis(null); setMeetingDuration(0);
-    setYouTubeUrl(''); setSuperChatData(null); setSuperChatText('');
+    setTranscript([]);
+    setFullText('');
+    setAnalysis(null);
+    setMeetingDuration(0);
   };
 
   const formatTime = (s) => {
@@ -120,15 +95,11 @@ function App() {
           <div className="tab-nav">
             <button className={`tab-btn ${activeTab === 'recorder' ? 'active' : ''}`} onClick={() => setActiveTab('recorder')}>Meeting Recorder</button>
             <button className={`tab-btn ${activeTab === 'transcript' ? 'active' : ''}`} onClick={() => setActiveTab('transcript')}>Live Transcript</button>
-            <button className={`tab-btn ${activeTab === 'youtube' ? 'active' : ''}`} onClick={() => setActiveTab('youtube')}>YouTube Summarizer</button>
-            <button className={`tab-btn ${activeTab === 'superchat' ? 'active' : ''}`} onClick={() => setActiveTab('superchat')}>Super Chat</button>
             <button className={`tab-btn ${activeTab === 'analysis' ? 'active' : ''}`} onClick={() => setActiveTab('analysis')}>AI Analysis</button>
           </div>
           <div className="tab-content">
             {activeTab === 'recorder' && <MeetingRecorder isRecording={isRecording} startRecording={startRecording} stopRecording={stopRecording} clearSession={clearSession} handleManualAnalyze={runAnalysis} setFullText={setFullText} setAnalysis={setAnalysis} isAnalyzing={isAnalyzing} hasContent={transcript.length > 0} apiKey={apiKey} />}
             {activeTab === 'transcript' && <TranscriptPanel transcript={transcript} isRecording={isRecording} />}
-            {activeTab === 'youtube' && <YouTubeSummarizer apiKey={apiKey} />}
-            {activeTab === 'superchat' && <SuperChat apiKey={apiKey} transcript={transcript} />}
             {activeTab === 'analysis' && <AnalysisPanel analysis={analysis} />}
           </div>
         </div>
