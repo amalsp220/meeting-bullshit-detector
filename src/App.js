@@ -86,8 +86,7 @@ function App() {
     setIsSummarizing(true);
     try {
       const result = await summarizeYouTubeVideo(url, apiKey);
-      setAnalysis(result);
-      setActiveTab('analysis');
+      setSuperChatData(result);
     } catch (err) { alert('Failed to summarize: ' + err.message); }
     setIsSummarizing(false);
   };
@@ -96,7 +95,7 @@ function App() {
     if (!text || !apiKey) return;
     setIsGeneratingSuperChat(true);
     try {
-      const result = await generateSuperChat(text, apiKey);
+      const result = await generateSuperChat(text, '', apiKey);
       setSuperChatData(result);
     } catch (err) { alert('Failed to generate Super Chat: ' + err.message); }
     setIsGeneratingSuperChat(false);
@@ -126,10 +125,10 @@ function App() {
             <button className={`tab-btn ${activeTab === 'analysis' ? 'active' : ''}`} onClick={() => setActiveTab('analysis')}>AI Analysis</button>
           </div>
           <div className="tab-content">
-            {activeTab === 'recorder' && <MeetingRecorder isRecording={isRecording} startRecording={startRecording} stopRecording={stopRecording} clearSession={clearSession} handleAnalyze={runAnalysis} isAnalyzing={isAnalyzing} hasContent={transcript.length > 0} apiKey={apiKey} manualText={fullText} setManualText={setFullText} />}
+            {activeTab === 'recorder' && <MeetingRecorder isRecording={isRecording} startRecording={startRecording} stopRecording={stopRecording} clearSession={clearSession} handleManualAnalyze={runAnalysis} setFullText={setFullText} setAnalysis={setAnalysis} isAnalyzing={isAnalyzing} hasContent={transcript.length > 0} apiKey={apiKey} />}
             {activeTab === 'transcript' && <TranscriptPanel transcript={transcript} isRecording={isRecording} />}
-            {activeTab === 'youtube' && <YouTubeSummarizer url={youTubeUrl} setUrl={setYouTubeUrl} onSummarize={handleYouTubeSummarize} isSummarizing={isSummarizing} apiKey={apiKey} />}
-            {activeTab === 'superchat' && <SuperChat text={superChatText} setText={setSuperChatText} onGenerate={handleSuperChat} superChatData={superChatData} isGenerating={isGeneratingSuperChat} apiKey={apiKey} />}
+            {activeTab === 'youtube' && <YouTubeSummarizer apiKey={apiKey} />}
+            {activeTab === 'superchat' && <SuperChat apiKey={apiKey} transcript={transcript} />}
             {activeTab === 'analysis' && <AnalysisPanel analysis={analysis} />}
           </div>
         </div>
