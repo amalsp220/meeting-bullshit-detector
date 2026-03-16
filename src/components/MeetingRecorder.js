@@ -2,15 +2,24 @@ import React, { useState } from 'react';
 import './MeetingRecorder.css';
 
 const MeetingRecorder = ({
-  isRecording, startRecording, stopRecording,
-  clearSession, handleManualAnalyze,
-  isAnalyzing, hasContent, apiKey
+  isRecording,
+  startRecording,
+  stopRecording,
+  clearSession,
+  handleManualAnalyze,
+  setFullText,
+  setAnalysis,
+  isAnalyzing,
+  hasContent,
+  apiKey
 }) => {
   const [manualText, setManualText] = useState('');
   const [showManual, setShowManual] = useState(false);
 
   const handleManualSubmit = () => {
     if (manualText.trim()) {
+      setFullText(manualText);
+      setAnalysis(null);
       handleManualAnalyze(manualText);
     }
   };
@@ -21,7 +30,7 @@ const MeetingRecorder = ({
         <div className={`recorder__orb ${isRecording ? 'recorder__orb--active' : ''}`}>
           <div className="recorder__orb-inner">
             <span className="recorder__orb-icon">
-              {isRecording ? '🎤' : '🟢'}
+              {isRecording ? '\u{1F3A4}' : '\u{1F7E2}'}
             </span>
           </div>
           {isRecording && (
@@ -32,125 +41,64 @@ const MeetingRecorder = ({
             </>
           )}
         </div>
-
         <div className="recorder__status">
-          <h3 className={`recorder__status-title ${isRecording ? 'recording' : ''}`}>
-            {isRecording ? 'Recording in Progress...' : 'Ready to Analyze'}
-          </h3>
-          <p className="recorder__status-desc">
+          <h2 className="recorder__title">
+            {isRecording ? 'Recording...' : 'Ready to Record'}
+          </h2>
+          <p className="recorder__subtitle">
             {isRecording
-              ? 'AI is listening and analyzing your meeting in real-time'
-              : 'Start recording to detect BS, circular discussions and track productivity'}
+              ? 'Meeting is in progress. Click to stop.'
+              : 'Click the microphone to start recording your meeting.'}
           </p>
         </div>
-
-        <div className="recorder__actions">
-          {!isRecording ? (
-            <button
-              className="btn btn--primary btn--lg"
-              onClick={startRecording}
-              disabled={!apiKey}
-            >
-              <span className="btn__icon">🎤</span>
-              Start Recording
-            </button>
-          ) : (
-            <button
-              className="btn btn--danger btn--lg"
-              onClick={stopRecording}
-            >
-              <span className="btn__icon">⏹️</span>
-              Stop & Analyze
-            </button>
-          )}
-
-          {hasContent && !isRecording && (
-            <button
-              className="btn btn--secondary"
-              onClick={handleManualAnalyze}
-              disabled={isAnalyzing}
-            >
-              {isAnalyzing ? (
-                <><span className="spinner"></span> Analyzing...</>
-              ) : (
-                <><span className="btn__icon">🤖</span> Re-Analyze</>
-              )}
-            </button>
-          )}
-
+        <div className="recorder__controls">
+          <button
+            className={`recorder__btn ${isRecording ? 'recorder__btn--recording' : 'recorder__btn--start'}`}
+            onClick={isRecording ? stopRecording : startRecording}
+            disabled={isAnalyzing}
+          >
+            {isRecording ? 'Stop Recording' : 'Start Recording'}
+          </button>
           {hasContent && (
-            <button className="btn btn--ghost" onClick={clearSession}>
-              <span className="btn__icon">🗑️</span>
+            <button
+              className="recorder__btn recorder__btn--secondary"
+              onClick={clearSession}
+              disabled={isAnalyzing || isRecording}
+            >
               Clear Session
             </button>
           )}
         </div>
-
-        {!apiKey && (
-          <div className="no-api-warning">
-            <span>⚠️</span>
-            <span>Please enter your OpenAI API key in the header to enable AI analysis</span>
-          </div>
-        )}
-      </div>
-
-      <div className="recorder__divider">
-        <span>OR</span>
       </div>
 
       <div className="recorder__manual">
         <button
-          className="toggle-manual-btn"
+          className="recorder__toggle"
           onClick={() => setShowManual(!showManual)}
+          disabled={isRecording || isAnalyzing}
         >
-          <span>{showManual ? '▼' : '▶'}</span>
-          Paste Meeting Text Manually
+          {showManual ? '\u{1F645} Hide Manual Input' : '\u{270D} Enter Text Manually'}
         </button>
-
         {showManual && (
-          <div className="manual-input-section animate-fade">
+          <div className="recorder__manual-panel">
             <textarea
-              className="manual-textarea"
-              placeholder="Paste meeting notes, transcript, or discussion text here..."
+              className="recorder__textarea"
+              placeholder="Paste or type your meeting transcript here..."
               value={manualText}
-              onChange={e => setManualText(e.target.value)}
+              onChange={(e) => setManualText(e.target.value)}
               rows={8}
             />
-            <div className="manual-actions">
-              <span className="char-count">{manualText.length} characters</span>
+            <div className="recorder__manual-actions">
               <button
-                className="btn btn--primary"
+                className="action-btn"
                 onClick={handleManualSubmit}
-                disabled={!manualText.trim() || isAnalyzing || !apiKey}
+                disabled={!manualText.trim() || isAnalyzing}
               >
-                {isAnalyzing ? (
-                  <><span className="spinner"></span> Analyzing...</>
-                ) : (
-                  <>🤖 Analyze This Text</>
-                )}
+                {isAnalyzing ? 'Analyzing...' : 'Analyze Meeting'}
               </button>
             </div>
           </div>
         )}
-      </div>
-
-      <div className="recorder__features">
-        <div className="feature-chip">
-          <span>🎤</span>
-          <span>Speech-to-Text</span>
-        </div>
-        <div className="feature-chip">
-          <span>🧠</span>
-          <span>NLP Analysis</span>
-        </div>
-        <div className="feature-chip">
-          <span>📊</span>
-          <span>Real-time Dashboard</span>
-        </div>
-        <div className="feature-chip">
-          <span>⚡</span>
-          <span>GPT-4 Powered</span>
-        </div>
       </div>
     </div>
   );
