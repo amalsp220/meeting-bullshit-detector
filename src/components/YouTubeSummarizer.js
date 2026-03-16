@@ -46,7 +46,7 @@ function YouTubeSummarizer({ apiKey }) {
 
   return (
     <div className="youtube-summarizer">
-      <h2><span className="icon">\u{1F4FA}</span> YouTube Video Summarizer</h2>
+      <h2><span className="icon">📺</span> YouTube Video Summarizer</h2>
       <div className="input-group">
         <input
           type="text"
