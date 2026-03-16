@@ -91,8 +91,7 @@ function App() {
     <div className="app">
       <Header apiKey={apiKey} setApiKey={setApiKey} isRecording={isRecording} meetingDuration={formatTime(meetingDuration)} />
       <main className="main-content">
-        <Dashboard analysis={analysis} />
-        <div className="bottom-section">
+        <Dashboard analysis={analysis}  isAnalyzing={isAnalyzing} meetingDuration={meetingDuration} />      <div className="bottom-section">
           <div className="tab-nav">
             <button className={`tab-btn ${activeTab === 'recorder' ? 'active' : ''}`} onClick={() => setActiveTab('recorder')}>Meeting Recorder</button>
             <button className={`tab-btn ${activeTab === 'transcript' ? 'active' : ''}`} onClick={() => setActiveTab('transcript')}>Live Transcript</button>
